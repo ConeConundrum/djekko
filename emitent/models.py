@@ -33,19 +33,24 @@ class Emitent(models.Model):
 
     """
     #  Choices for publishing stages
-    WORK_STATE_CHOICES = Choices((0, 'empty', 'Empty'),
-                                 (1, 'working', 'Working'),
-                                 (2, 'verification', 'Waiting verification'),
-                                 (3, 'publish', 'Ready to publish'))
+    WORK_STATE_CHOICES = Choices(
+        (0, 'empty', 'Empty'),
+        (1, 'working', 'Working'),
+        (2, 'verification', 'Waiting verification'),
+        (3, 'publish', 'Ready to publish')
+    )
 
     #
     # -----Base information fields-----
     #
 
     # Name
-    name = models.CharField(max_length=100,
-                            null=True,
-                            verbose_name='Emitent name')
+    name = models.CharField(
+        max_length=100,
+        null=True,
+        verbose_name='Emitent name',
+        unique=True
+    )
 
     # Industry
     industry = models.ForeignKey(
@@ -196,13 +201,18 @@ class Industry(models.Model):
     """
 
     #  Choices for publishing stages
-    WORK_STATE_CHOICES = Choices((0, 'empty', 'Empty'),
-                                 (1, 'working', 'Working'),
-                                 (2, 'verification', 'Waiting verification'),
-                                 (3, 'publish', 'Ready to publish'))
+    WORK_STATE_CHOICES = Choices(
+        (0, 'empty', 'Empty'),
+        (1, 'working', 'Working'),
+        (2, 'verification', 'Waiting verification'),
+        (3, 'publish', 'Ready to publish')
+    )
 
     # name
-    industry = models.CharField(unique=True, max_length=100)
+    industry = models.CharField(
+        unique=True,
+        max_length=100
+    )
 
     # url in system
     url_name = models.CharField(
@@ -256,10 +266,12 @@ class IndustrySubgroup(models.Model):
     """
 
     #  Choices for publishing stages
-    WORK_STATE_CHOICES = Choices((0, 'empty', 'Empty'),
-                                 (1, 'working', 'Working'),
-                                 (2, 'verification', 'Waiting verification'),
-                                 (3, 'publish', 'Ready to publish'))
+    WORK_STATE_CHOICES = Choices(
+        (0, 'empty', 'Empty'),
+        (1, 'working', 'Working'),
+        (2, 'verification', 'Waiting verification'),
+        (3, 'publish', 'Ready to publish')
+    )
 
     # Foreign related field to industry model
     industry = models.ForeignKey(
