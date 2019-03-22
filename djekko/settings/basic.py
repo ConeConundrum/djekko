@@ -1,18 +1,23 @@
 import json
 import os
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Utilities
+PROJECT_PACKAGE = Path(__file__).resolve().parent.parent
+
+# The full path to the repository root.
+BASE_DIR = PROJECT_PACKAGE.parent
 
 # Grab secret data
 try:
-    with open(BASE_DIR.join('config/secrets.json')) as secret_file:
+    with open(BASE_DIR.joinpath('config', 'secrets.json')) as secret_file:
         SECRETS = json.load(secret_file)
-        print(SECRETS)
 except IOError:
-
-    print('Load default')
+    print('Load default config')
     SECRETS = {
         'secret_key': 'qwerty',
+        'db_name': 'main.sqlite3',
+        'db_engine': 'django.db.backends.sqlite3',
     }
 
 SECRET_KEY = str(SECRETS['secret_key'])
@@ -62,7 +67,7 @@ WSGI_APPLICATION = 'djekko.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': SECRETS.get('db_engine'),
         'NAME': SECRETS.get('db_name', ''),
         'USER': SECRETS.get('db_owner', ''),
         'HOST': SECRETS.get('db_host', ''),
