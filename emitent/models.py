@@ -4,6 +4,7 @@ from model_utils import Choices
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
 
 
 #
@@ -135,6 +136,14 @@ class Emitent(models.Model):
         on_delete=models.CASCADE,
         null=True,
         verbose_name='User'
+    )
+
+    # Ticker field
+    ticker = models.CharField(
+        unique=True,
+        max_length=6,
+        blank=True,
+        null=True
     )
 
     #

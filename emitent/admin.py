@@ -12,6 +12,7 @@ class EmitentAdminSetup(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['publish_stage']}),
         (None, {'fields': ['name']}),
+        ('Emitent ticker', {'fields': ['ticker']}),
         ('Emitent industry', {'fields': ['industry', 'industry_subgroup']}),
         ('Emitent web-site and documents urls', {'fields': ['web_site', 'documents_url']}),
         ('Emitent features', {'fields': ['main_advantages']}),
