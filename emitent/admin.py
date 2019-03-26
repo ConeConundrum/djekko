@@ -26,7 +26,7 @@ class EmitentAdminSetup(admin.ModelAdmin):
 
     # save model with user name
     def save_model(self, request, obj, form, change):
-        obj.last_changes_user = request.user
+        obj.last_editor = request.user
         super().save_model(request, obj, form, change)
 
 
