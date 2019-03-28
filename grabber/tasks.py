@@ -27,19 +27,22 @@ class FinancialReportGrabber(object):
                 r'{}',
                 r'\wденица измерения.*{}.*'
             ]
-
         },
         'cash': {
-            'keywords': {},
-            'reg_exp': []
+            'reg_exp': [
+                r'\wash and cash equivalents[0-9 ]*\n',
+                r'денежные средства и их эквиваленты[0-9 ]*\n'
+            ]
         },
         'equity': {
-            'keywords': {},
-            'reg_exp': []
+            'reg_exp': [
+                r'капитал[0-9 ]*\n'
+            ]
         },
         'liabilities': {
-            'keywords': {},
-            'reg_exp': []
+            'reg_exp': [
+                r'.*обязательства.*'
+            ]
         },
         'equity_liabilities': {
             'keywords': {},
@@ -68,8 +71,9 @@ class FinancialReportGrabber(object):
             'reg_exp': []
         },
         'amortization': {
-            'keywords': {},
-            'reg_exp': []
+            'reg_exp': [
+                r'Амортизация[0-9 ]*\n'
+            ]
         },
         'capitalization': {
             'keywords': {},
@@ -97,20 +101,38 @@ class FinancialReportGrabber(object):
 
     def _scan_one_value(self, value_dict):
 
-        keywords = value_dict["keywords"]
-        reg_exp = value_dict["reg_exp"]
+        def row_values(row):
+
+            # TODO Need to validate this approach
+            values_pattern = r'\d{0,3}\d{1,3}.?\d{1,3}'
+            vals = re.findall(values_pattern, row)
+            if len(vals) == 2:
+                return vals[0].replace(' ', '')
+            elif len(vals) == 4:
+                return vals[2].replace(' ', '')
+
+        keywords = value_dict.get("keywords")
+        reg_exp = value_dict.get("reg_exp")
         egg_set = set()
         final_set = set()
 
-        if keywords or reg_exp:
+        if keywords:
             for keyword in keywords:
                 for reg_expression in reg_exp:
                     data = re.findall(reg_expression.format(keyword), self.content)
                     if data:
                         egg_set.update(set(data))
-        if egg_set:
-            for egg_key in egg_set:
-                final_set.add(keywords[egg_key])
+
+            if egg_set:
+                for egg_key in egg_set:
+                    final_set.add(keywords[egg_key])
+
+        else:
+            for reg_expression in reg_exp:
+                f_data = re.findall(reg_expression, self.content)
+                if f_data:
+                    print(f_data)
+                    final_set.add(row_values(set(f_data).pop()))
 
         if not final_set or len(final_set) > 1:
             return None
